@@ -1,4 +1,8 @@
+github.com/google/embiggen-disk v0.0.0-20190314181031-9fcbd1dfba08 h1:GpRd0a+ujC3ENMK/J7nwCyfeQ8x0x8KrjhIXyenGLNE=
+github.com/google/embiggen-disk v0.0.0-20190314181031-9fcbd1dfba08/go.mod h1:uRAoLCWI0Y0kDNeQV/9JnBmN7FxTKFhkIgCYxtFvBB0=
 github.com/u-root/u-root v0.0.0-20180806213625-12f9029297cf h1:EEvaBfp7JfttSDsqDibrSFPXga9xuthzkVt9IfatI2w=
 github.com/u-root/u-root v0.0.0-20180806213625-12f9029297cf/go.mod h1:RYkpo8pTHrNjW08opNd/U6p/RJE7K0D8fXO0d47+3YY=
 golang.org/x/sys v0.0.0-20180727230415-bd9dbc187b6e h1:3dQ4fR8k5KugjVKO0oqSd1odxuk2yaE2CIfxWP2WarQ=
 golang.org/x/sys v0.0.0-20180727230415-bd9dbc187b6e/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
+golang.org/x/sys v0.0.0-20190412213103-97732733099d h1:+R4KGOnez64A81RvjARKc4UT5/tI9ujCIVX+P5KiHuI=
+golang.org/x/sys v0.0.0-20190412213103-97732733099d/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=

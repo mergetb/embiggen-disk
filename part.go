@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package main
+package embiggen
 
 import (
 	"bytes"
@@ -38,7 +38,7 @@ import (
 const (
 	lvmGPTTypeID       = "E6D6D379-F507-44C2-A23C-238F2A3DF928"
 	rootx8664GPTTypeID = "4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709"
-	linuxGPTTypeId     = "0FC63DAF-8483-4772-8E79-3D69D8477DE4"
+	linuxGPTTypeID     = "0FC63DAF-8483-4772-8E79-3D69D8477DE4"
 )
 
 type partitionResizer string // "/dev/sda3"
@@ -109,7 +109,7 @@ func (p partitionResizer) Resize() error {
 
 	if isGPT {
 		switch lastType {
-		case lvmGPTTypeID, rootx8664GPTTypeID, linuxGPTTypeId:
+		case lvmGPTTypeID, rootx8664GPTTypeID, linuxGPTTypeID:
 		default:
 			return fmt.Errorf("unknown GPT partition type %q for %s", lastType, part.dev)
 		}
@@ -121,7 +121,7 @@ func (p partitionResizer) Resize() error {
 		}
 	}
 
-	if *verbose {
+	if Verbose {
 		fmt.Printf("Current partition table:\n")
 		pt.Write(os.Stdout)
 		fmt.Println()
@@ -133,7 +133,7 @@ func (p partitionResizer) Resize() error {
 	}
 	end := part.Start() + part.Size()
 	remain := size - end
-	if *verbose {
+	if Verbose {
 		fmt.Printf("Cur size: %d\n", size)
 		fmt.Printf("Part start: %d\n", part.Start())
 		fmt.Printf("Part size: %d\n", part.Size())
@@ -151,29 +151,29 @@ func (p partitionResizer) Resize() error {
 	part.SetSize(part.Size() + extend)
 	pt.RemoveMeta("last-lba") // or sfdisk complains
 
-	if *verbose {
+	if Verbose {
 		fmt.Printf("Need to extend disk by %d sectors (%d bytes, %0.03f GiB)\n", extend, extend*512, float64(extend)*512/(1<<30))
 		fmt.Printf("New partition table to write:\n")
 	}
 
 	var newPart bytes.Buffer
 	pt.Write(&newPart)
-	if *verbose {
+	if Verbose {
 		fmt.Printf("%s\n", newPart.Bytes())
 	}
 
-	if *dry {
+	if Dry {
 		fmt.Printf("[dry-run] would've run sfdisk -f to set new partition table\n")
 		return nil
 	}
 
-	if *verbose {
+	if Verbose {
 		fmt.Println("Setting new partition table...")
 	}
 	cmd := exec.Command("/sbin/sfdisk", "-f", "--no-reread", "--no-tell-kernel", diskDev)
 	cmd.Stdin = bytes.NewReader(newPart.Bytes())
 	var outBuf bytes.Buffer
-	if *verbose {
+	if Verbose {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 	} else {

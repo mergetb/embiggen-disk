@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package main
+package embiggen
 
 import (
 	"bufio"
@@ -72,7 +72,7 @@ func (e fsResizer) DepResizer() (Resizer, error) {
 }
 
 func (e fsResizer) Resize() error {
-	if *dry {
+	if Dry {
 		fmt.Printf("[dry-run] would've run %v %v\n", e.cmd.Path, e.cmd.Args)
 		return nil
 	}
