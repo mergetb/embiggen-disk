@@ -356,7 +356,6 @@ func getPartitionTable(dev string) *partitionTable {
 		if pt.parts == nil {
 			if semver.Compare(sfdiskVersion(), "v2.35.0") >= 1 {
 				if strings.HasPrefix(line, "sector-size:") {
-					fmt.Printf("skipping sector size for %s", sfdiskVersion())
 					continue
 				}
 			}
