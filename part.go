@@ -32,6 +32,7 @@ import (
 	"unicode"
 	"unsafe"
 
+	"golang.org/x/mod/semver"
 	"golang.org/x/sys/unix"
 )
 
@@ -325,6 +326,17 @@ func (sl sfdiskLine) Type() string {
 func (sl sfdiskLine) Start() int64 { return sl.AttrInt64("start") }
 func (sl sfdiskLine) Size() int64  { return sl.AttrInt64("size") }
 
+func sfdiskVersion() string {
+
+	out, err := exec.Command("/sbin/sfdisk", "--version").Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+	parts := strings.Split(string(out), " ")
+	return fmt.Sprintf("v%s", strings.TrimSpace(parts[len(parts)-1]))
+
+}
+
 func getPartitionTable(dev string) *partitionTable {
 	pt := new(partitionTable)
 	out, err := exec.Command("/sbin/sfdisk", "-d", dev).Output()
@@ -342,6 +354,12 @@ func getPartitionTable(dev string) *partitionTable {
 			continue
 		}
 		if pt.parts == nil {
+			if semver.Compare(sfdiskVersion(), "v2.35.0") >= 1 {
+				if strings.HasPrefix(line, "sector-size:") {
+					fmt.Printf("skipping sector size for %s", sfdiskVersion())
+					continue
+				}
+			}
 			pt.meta = append(pt.meta, line)
 		} else {
 			f := strings.SplitN(string(line), ":", 2)
